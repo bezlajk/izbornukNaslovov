@@ -1,16 +1,17 @@
-package org.acme.getting.started;
+package org.address.service.entites;
 
+import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-public class Person extends MyEntity {
+@Entity
+public class Person {
+    @Id
+    @GeneratedValue(strategy= GenerationType.TABLE, generator="sequence")
+    private Long id;
     private String name;
     private String surname;
-    private List<Long> addressId = new ArrayList<>();
 
-
+    public Person() {
+    }
 
     public String getName() {
         return name;
@@ -28,12 +29,11 @@ public class Person extends MyEntity {
         this.surname = surname;
     }
 
-    public List<Long> getAddressId() {
-        return addressId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAddressId(List<Long> addressId) {
-        this.addressId = addressId;
+    public void setId(Long id) {
+        this.id = id;
     }
-
 }

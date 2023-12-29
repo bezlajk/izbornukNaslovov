@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package org.address.service;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 

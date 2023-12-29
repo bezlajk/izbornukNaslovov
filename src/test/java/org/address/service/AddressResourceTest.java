@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package org.address.service;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
