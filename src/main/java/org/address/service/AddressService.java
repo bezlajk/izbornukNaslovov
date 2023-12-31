@@ -3,8 +3,10 @@ package org.address.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.address.service.entites.Address;
 import org.address.service.entites.Person;
+import org.address.service.entites.Post;
 import org.address.service.repository.AddressRepository;
 import org.address.service.repository.PersonRepository;
+import org.address.service.repository.PostRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,10 +18,12 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
     private final PersonRepository personRepository;
+    private final PostRepository postRepository;
 
-    public AddressService(AddressRepository addressRepository, PersonRepository personRepository) {
+    public AddressService(AddressRepository addressRepository, PersonRepository personRepository, PostRepository postRepository) {
         this.addressRepository = addressRepository;
         this.personRepository = personRepository;
+        this.postRepository = postRepository;
     }
 
     public List<Address> getAddresses() {
@@ -47,33 +51,61 @@ public class AddressService {
     }
 
     public Address addAddress(Address address) throws Exception {
-        try {
-            List<Address> addresses = new ArrayList<>();
-            if (address.getPerson().getId()==null){
-                Person person = personRepository.save(address.getPerson());
-                address.setPerson(person);
+
+        List<Address> addresses = new ArrayList<>();
+        if (address.getPerson().getId()==null){
+            Person person = personRepository.save(address.getPerson());
+            address.setPerson(person);
+        }
+        Optional<Post> post = postRepository.findById(address.getPost().getId());
+        if ( post.isEmpty() ){
+            Post postNew = postRepository.save(address.getPost());
+            address.setPost(postNew);
+        }
+        else {
+            addresses = addressRepository.findByPersonId(address.getPerson().getId());
+        }
+        if (addresses.size()<3){
+            if (isDuplicate(addresses, address)){
+                throw new Exception("These address already exists for these person.");
             }
-            else {
-                addresses = addressRepository.findByPersonId(address.getPerson().getId());
+            if (verifyName(address, addresses)){
+                throw new Exception("Address name already exists for these person.");
             }
-            if (addresses.size()<3){
-                if (address.isDefault()) {
-                    for (Address address1 : addresses) {
-                        if (address1.isDefault()) {
-                            address1.setDefault(false);
-                            addressRepository.save(address1);
-                        }
-                    }
-                }
-                return addressRepository.save(address);
+            if (address.isDefault()) {
+                setAllToAngefault(addresses);
             }
-            else {
-                throw new Exception("There are already 3 entries in DB, saving aborted.");
+            return addressRepository.save(address);
+        }
+        else {
+            throw new Exception("There are already 3 entries in DB, saving aborted.");
+        }
+    }
+
+    private boolean isDuplicate(List<Address> addresses, Address address){
+        for (Address addressExisting: addresses){
+            if (addressExisting.equals(address)){
+                return true;
             }
         }
-        catch (Exception e){
-            throw new Exception("Error while adding Address.");
+        return false;
+    }
+
+    private void setAllToAngefault(List<Address> addresses){
+        for (Address addressExisting : addresses) {
+            if (addressExisting.isDefault()) {
+                addressExisting.setDefault(false);
+                addressRepository.save(addressExisting);
+            }
         }
+    }
+    private boolean verifyName(Address address, List<Address> addresses){
+        for (Address addressExisting : addresses) {
+            if (addressExisting.getNameOfAddress().equalsIgnoreCase(address.getNameOfAddress())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public Person addPerson(Person person) throws Exception {

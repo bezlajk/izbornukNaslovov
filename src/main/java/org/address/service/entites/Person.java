@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class Person {
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE, generator="sequence")
+    @GeneratedValue(strategy= GenerationType.TABLE, generator="sequence_person")
     private Long id;
     private String name;
     private String surname;

@@ -2,18 +2,23 @@ package org.address.service.entites;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Address {
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE, generator="sequence")
+    @GeneratedValue(strategy= GenerationType.TABLE, generator="sequence_address")
     private Long id;
     //for simplifying user for example he can put home or job or simple Address 5
     private String nameOfAddress;
     private String companyName;
     private String street;
     private Long houseNumber;
-    private Long postNumber;
-    private String post;
+
+    @OneToOne
+    @JoinColumn(name = "postId", referencedColumnName = "id")
+    private Post post;
+
     private String city;
     private String country;
 
@@ -60,22 +65,6 @@ public class Address {
         this.houseNumber = houseNumber;
     }
 
-    public Long getPostNumber() {
-        return postNumber;
-    }
-
-    public void setPostNumber(Long postNumber) {
-        this.postNumber = postNumber;
-    }
-
-    public String getPost() {
-        return post;
-    }
-
-    public void setPost(String post) {
-        this.post = post;
-    }
-
     public String getCity() {
         return city;
     }
@@ -114,5 +103,26 @@ public class Address {
 
     public void setDefault(boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(companyName, address.companyName) && Objects.equals(street, address.street) && Objects.equals(houseNumber, address.houseNumber) && Objects.equals(post.getId(), address.post.getId()) && Objects.equals(city, address.city) && Objects.equals(country, address.country) && Objects.equals(person.getId(), address.person.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyName, street, houseNumber, post, city, country, person);
     }
 }
