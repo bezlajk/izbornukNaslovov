@@ -15,5 +15,4 @@ This command will leave Quarkus running in the foreground listening on port 8080
 
 ### Data Base
 
-Use https://github.com/bezlajk/izbornukNaslovov/blob/master/CreateTablesAndInsrt.sql script to create neccessery tables in your local **MySQL** table.
-It also adds some insewrts in tables.
+Use https://github.com/bezlajk/izbornukNaslovov/blob/master/CreateTablesAndInsrt.sql script to create necessary tables in your local **MySQL** table. It also inserts one row per table, for easy start.
