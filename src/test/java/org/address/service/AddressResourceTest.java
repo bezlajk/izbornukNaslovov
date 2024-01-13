@@ -13,7 +13,7 @@ public class AddressResourceTest {
     @Test
     public void testAddressEndpoint() {
         given()
-                .when().get("/address")
+                .when().get("/hello")
                 .then()
                 .statusCode(200)
                 .body(is("Hello I'll provide some addresses."));

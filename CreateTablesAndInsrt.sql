@@ -43,14 +43,12 @@ INSERT INTO address (id, nameOfAddress, companyName, street, houseNumber, postId
  
  CREATE TABLE sequence_address ( sequence_name VARCHAR(30), next_val INT NOT NULL);
  INSERT INTO sequence_address VALUES ('Address', 1);
+ SET SQL_SAFE_UPDATES = 0;
  UPDATE sequence_address SET next_val=LAST_INSERT_ID(next_val+1);
  
  CREATE TABLE sequence_person ( sequence_name VARCHAR(30), next_val INT NOT NULL);
  INSERT INTO sequence_person VALUES ('Person', 1);
  UPDATE sequence_person SET next_val=LAST_INSERT_ID(next_val+1);
  
- 
- SET SQL_SAFE_UPDATES = 0;
- 
- 
+
 
